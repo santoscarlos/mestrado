@@ -217,7 +217,8 @@ def _apply_transform(hashed_table, w0, w1):
     
     """
     # TODO: think of a better name for this function
-    unique_groups, inverse_index = np.unique(hashed_table, 
+    unique_groups, u_index, u_inverse = np.unique(hashed_table, 
+                                             return_index=True,     
                                              return_inverse=True)
     sum0 = []                                         
     sum1 = []
@@ -226,8 +227,8 @@ def _apply_transform(hashed_table, w0, w1):
         sum1.append(w1[hashed_table == g].sum())
     cls_error = error(sum0, sum1)
     hashed_decision = make_decision(sum0, sum1)
-    updated_decision = hashed_decision[inverse_index]
-    return cls_error, updated_decision
+    updated_decision = hashed_decision[u_inverse]
+    return cls_error, updated_decision, u_index
 
 def _product_hash(table):
     """

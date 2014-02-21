@@ -45,17 +45,17 @@ def test_apply_transform():
     sum1 = np.array([w1[0] + w1[3], w1[1] + w1[4], w1[2]])
     expected_error = sum0.sum()
     expected_table = np.ones(5)
-    _error, _table = cl._apply_transform(hashed_table, w0, w1)
+    _error, _table, u_index = cl._apply_transform(hashed_table, w0, w1)
     nt.assert_almost_equal(_error, expected_error)
     nt.assert_allclose(_table, expected_table)  
-    del w0, w1, sum0, sum1, expected_error, expected_table, _error, _table
+    del w0, w1, sum0, sum1, expected_error, expected_table, _error, _table, u_index
     w0 = np.array([0.13,  0.05, 0.08, 0.15, 0.2])
     w1 = np.array([0.02,  0.05, 0.02, 0.05, 0.25])
     sum0 = np.array([w0[0] + w0[3], w0[1] + w0[4], w0[2]])
     sum1 = np.array([w1[0] + w1[3], w1[1] + w1[4], w1[2]])
     expected_error = sum1[0] + sum0[1] + sum1[2]
     expected_table = np.array([0, 1, 0, 0, 1])
-    _error, _table = cl._apply_transform(hashed_table, w0, w1)
+    _error, _table, u_index = cl._apply_transform(hashed_table, w0, w1)
     nt.assert_almost_equal(_error, expected_error)
     nt.assert_allclose(_table, expected_table)
     
@@ -116,8 +116,11 @@ def test_apply_projection():
                       [0, 1, 1, 1, 1],
                       [0, 0, 0, 1, 1],
                       [0, 0, 0, 0, 1]])
-    index = np.array([0,1])
-    t,i = cl._apply_projection(table, index)
+    index = np.array([0, 1])
+    t, i = cl._apply_projection(table, index)
     expected_t = np.array([[0,0],[1,0],[0,1],[1,1]])
     nt.assert_array_equal(t , expected_t)
+    r_table = table[:, index]
+    r_table = r_table[i]
+    nt.assert_equal(r_table, t)
       
